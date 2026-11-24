@@ -67,7 +67,7 @@ comment ID/body verified (10/10).
 | VonHoltenCodes/SlowBooks-Pro-2026 | #1219 | 7145447614 | yes (maintainer calls it a beta known limitation) |
 | teslamate-org/teslamate | #5533 | 7145448158 | yes (weakest fit) |
 
-## PR log — 7 open PRs, 1 blocked (2026-11-25 IST)
+## PR log — 6 open PRs, 1 auto-closed, 1 blocked (2026-11-25 IST)
 
 Action repo published at https://github.com/DawnofGenX/restore-verify-action
 (current tag `v0.2`, 0★ at publication). Each PR adds only
@@ -80,7 +80,7 @@ The exact workflow dump was run locally through `src/verify.py` on
 | Repo | PR | Status |
 |---|---|---|
 | supabase/supabase | [#53980](https://github.com/supabase/supabase/pull/53980) | open |
-| immich-app/immich | [#33670](https://github.com/immich-app/immich/pull/33670) | open |
+| immich-app/immich | [#33670](https://github.com/immich-app/immich/pull/33670) | closed by repo bot (`auto-closed:template`) — body later corrected to template; repo CONTRIBUTING.md asks contributors not to use LLMs to generate PRs, so not reopened |
 | appsmithorg/appsmith | [#42680](https://github.com/appsmithorg/appsmith/pull/42680) | open |
 | ddev/ddev | [#9198](https://github.com/ddev/ddev/pull/9198) | open |
 | agentes-chat/agentes-chat | [#1371](https://github.com/agentes-chat/agentes-chat/pull/1371) | open |
