@@ -80,7 +80,7 @@ The exact workflow dump was run locally through `src/verify.py` on
 | Repo | PR | Status |
 |---|---|---|
 | supabase/supabase | [#53980](https://github.com/supabase/supabase/pull/53980) | open |
-| immich-app/immich | [#33670](https://github.com/immich-app/immich/pull/33670) | closed by repo bot (`auto-closed:template`) — body later corrected to template; repo CONTRIBUTING.md asks contributors not to use LLMs to generate PRs, so not reopened |
+| immich-app/immich | [#33670](https://github.com/immich-app/immich/pull/33670) | closed by author after the bot reopened it: repo CONTRIBUTING.md asks contributors not to use LLMs to generate PRs; this workflow/body were LLM-drafted and that was disclosed |
 | appsmithorg/appsmith | [#42680](https://github.com/appsmithorg/appsmith/pull/42680) | open |
 | ddev/ddev | [#9198](https://github.com/ddev/ddev/pull/9198) | open |
 | agentes-chat/agentes-chat | [#1371](https://github.com/agentes-chat/agentes-chat/pull/1371) | open |
