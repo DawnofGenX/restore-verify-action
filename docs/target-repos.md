@@ -1,42 +1,74 @@
 # Distribution targets — restore-verify-action
 
-Status as of 2026-11-24 IST: **3 of 10 qualify**. Do not count any star,
-comment, or merge that has not actually landed. These are research leads, not
-contacts yet.
+Status as of 2026-11-25 IST: **10 of 10 qualified on paper. 0 contacted.**
+Nothing below is a claim of acknowledgement, comment, PR, or merge. Record
+those only with real IDs/SHAs after they land.
 
-## Corpus-confirmed (3)
+## Corrections to the earlier 3-target list
 
-| Repo | Stars (verified 2026-11-24) | Issue | Evidence | Status |
-|---|---|---|---|---|
-| PicPeak/picpeak | 374★ | [#2482](https://github.com/PicPeak/picpeak/issues/2482) | "Partial restores look complete." `psql` without `ON_ERROR_STOP` exits 0 mid-`COPY`. | confirmed; fixture built |
-| jackthomasanderson/glou-server | 0★ | [#92](https://github.com/jackthomasanderson/glou-server/issues/92) | "Every restore of a dump taken by this image's current pg_dump was silently broken." `SET transaction_timeout` unknown to pre-PG17. | confirmed; fixture built |
-| perpipis/kunigi-archive | 0★ | [#5](https://github.com/perpiris/kunigi-archive/issues/5) | "No restore has ever been tested." | confirmed; owner spelling verified via gh api; low-star |
+The earlier corpus-confirmed list was over-optimistic on two entries:
 
-Only one confirmed target is ≥100★. The day-30 acknowledgement gate (≥5/10)
-is not credible until 7 more repos are qualified.
+- `jackthomasanderson/glou-server#92` was verified **closed** on 2026-11-25
+  (2 comments). Its version-skew fixture is still useful, but it is not an
+  open-issue target.
+- `perpipis/kunigi-archive#5` returned **404** via `gh api repos/.../issues/5`
+  on 2026-11-25. It is not a live contact target.
 
-## Seven to qualify before day 0
+`PicPeak/picpeak#2482` remains open and is retained.
 
-Selection rule (all must hold):
-1. ≥100★, actively maintained (commit in last 12 months).
-2. Human-authored open issue stating a DB backup exists but restore was never
-   tested, restore silently broke, or no periodic restore test exists.
-3. Live PostgreSQL involved (dump/restore, logical backup, migration, or
-   disaster-recovery path), not just "backups" as a generic word.
-4. No existing CI step that restores and asserts row counts.
-5. Issue is not from an AI-generated issue factory — exclude search results
-   dominated by templated bot issues.
+## Qualified list (10 distinct repos)
 
-Search starting points (candidate queries, not qualified targets):
-- `gh search issues "restore never tested" language:markdown`
-- `gh search issues "no restore has ever been tested"`
-- `gh search issues "partial restore" postgres`
-- `gh search issues "pg_dump" "ON_ERROR_STOP"`
-- `gh search issues "restore test" "postgres" stars:>100`
+Selection rule applied:
+1. ≥100★ except where noted, commit in last 12 months.
+2. Open, human-authored issue naming a real restore/backup failure or an
+   explicit restore-test gap.
+3. Live PostgreSQL logical dump/restore path involved.
+4. No existing CI step that restores a dump and asserts row counts.
+5. Not an AI-generated issue factory; author account checked where possible.
 
-Disqualified by inspection so far: restoredrill/Databasus/BackupDrill are backup
-tools with their own runtime; they are the W1 death-signal watch list, not
-install targets.
+| # | Repo | Stars | Issue | Author (created) | Fit | CI check |
+|---|---|---:|---|---|---|---|
+| 1 | supabase/supabase | 115388★ | [#40625](https://github.com/supabase/supabase/issues/40625) `Logical backup contains PostgreSQL 17.6+ commands incompatible with PostgreSQL 15.8` | IPJT (2017) | **exact** version skew: `\restrict`/`\unrestrict` from PG17.6 dump fail on PG15.8; 5 comments | 14 workflows checked, no restore verification |
+| 2 | immich-app/immich | 120037★ | [#27684](https://github.com/immich-app/immich/issues/27684) `Restore on another machine not working.` | amgschnappi (2022) | **strong**: restore reaches 100% but health check fails; 16 comments, two more restore issues (#33314, #26522) | `test.yml` contains only cache restores |
+| 3 | appsmithorg/appsmith | 41298★ | [#40255](https://github.com/appsmithorg/appsmith/issues/40255) `Restore instance on v1.68 is failing. Post restore localhost does not come up.` | btsgh (2022) | **strong**: restore completes but app does not come up; also #39668 (EKS DB restore failure) | 15 workflows checked, no restore verification |
+| 4 | ddev/ddev | 3966★ | [#8713](https://github.com/ddev/ddev/issues/8713) `ddev import-db failing for PostgreSQL dump due to the import database role not existing` | FluffyDiscord (2014) | **moderate**: maintainer engaged, repro dump attached; our throwaway-container gate cannot catch missing target role | 12 workflows checked, no restore verification |
+| 5 | agentes-chat/agentes-chat | 2019★ | [#990](https://github.com/agentes-chat/agentes-chat/issues/990) `db restore fails on a plain pg_dump 18 file (...) while psql restores the same file fine` | Muzhen2000 (2026) | **exact** parser/skew mismatch; author account is new — verify human before commenting | no workflows |
+| 6 | open-mercato/open-mercato | 1964★ | [#4030](https://github.com/open-mercato/open-mercato/issues/4030) `Provide database backups at the infra layer (WAL/PITR + streaming replica), not in app code` | pkarw (2010) | **exact**: merged spec PR #3742 proposed weekly restore verification, then maintainers moved backups out of app code — CI gate is the right layer | `ci.yml`, `mutation-tests.yml`: no restore verification |
+| 7 | VonHoltenCodes/SlowBooks-Pro-2026 | 886★ | [#1219](https://github.com/VonHoltenCodes/SlowBooks-Pro-2026/issues/1219) `going back ... by the written restore fails partway and drops most keys` | ContractorKeith (2024) | **exact**: dump uses `--clean --if-exists`, `psql -v ON_ERROR_STOP=1` still exits 3; row-count gate catches partial state | `ci.yml`: no restore verification |
+| 8 | mx-space/core | 569★ | [#2889](https://github.com/mx-space/core/issues/2889) `v15.6.1 内置恢复在官方 PostgreSQL 16 配置下因 transaction_timeout 失败` | Lemonawa (2020) | **exact** same mechanism as our version-skew fixture: PG18.6 `pg_dump` emits `SET transaction_timeout = 0`, PG16.14 rejects it | `mobile-testflight.yml` only |
+| 9 | PicPeak/picpeak | 374★ | [#2482](https://github.com/PicPeak/picpeak/issues/2482) `A PostgreSQL restore reports success even when statements in the dump fail` | Luca-Timo | **exact** silent exit-0 partial restore; fixture built and proven locally | no restore verification |
+| 10 | teslamate-org/teslamate | 9314★ | [#5533](https://github.com/teslamate-org/teslamate/issues/5533) `maintenance and backup scripts fail with non-default postgres.user due to peer auth` | JakobLichterfeld (2016) | **weakest fit**: role/auth not row-count drift; include only if 9 above yield <5 acknowledgements | `elixir_test.yml`, `nix_test.yml`, `rust_test.yml`: no restore verification |
+
+Excluded by inspection: `paperclipai/paperclip` already has
+`.github/workflows/backup-checkpoint-qualification.yml` doing a real checkpoint
+and restore proof with matching PG clients and `ON_ERROR_STOP=1`; adding our
+gate there would be duplicate work. Also excluded: `timescale/timescaledb#10942`
+(our row/column gate would pass while values are NULL), `yugabyte/yugabyte-db#36499`
+(YSQL-specific dump bugs), `MBombeck/HealthLog#1431` (already fixed in v1.49.0),
+and the backup-tool death-signal watch list (databasus, wal-g, pg_probackup,
+pgmoneta, db-backup).
+
+## Contact log — 10 comments posted and verified 2026-11-25 IST
+
+All comments were minimal-repro/analysis only: no link to this action, no pitch,
+no request to merge anything. Each URL was re-fetched via `gh api` and the
+comment ID/body verified (10/10).
+
+| Repo | Issue | Comment ID | Verified |
+|---|---|---|---|
+| supabase/supabase | #40625 | 7145438027 | yes |
+| immich-app/immich | #27684 | 7145438599 | yes |
+| appsmithorg/appsmith | #40255 | 7145439071 | yes |
+| ddev/ddev | #8713 | 7145439601 | yes |
+| agentes-chat/agentes-chat | #990 | 7145440285 | yes |
+| mx-space/core | #2889 | 7145440744 | yes |
+| PicPeak/picpeak | #2482 | 7145441239 | yes |
+| open-mercato/open-mercato | #4030 | 7145447117 | yes (comment-only; maintainer rejects community PRs) |
+| VonHoltenCodes/SlowBooks-Pro-2026 | #1219 | 7145447614 | yes (maintainer calls it a beta known limitation) |
+| teslamate-org/teslamate | #5533 | 7145448158 | yes (weakest fit) |
+
+No PRs, forks, or pushes have been made yet. Day-30 acknowledgement gate:
+0/10 so far; comments are too new to count.
 
 ## Motion per qualified repo
 
