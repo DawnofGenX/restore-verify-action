@@ -37,3 +37,17 @@ COPY public.events (id, payload) FROM stdin;
     assert meta.tables["public.users"].rows == 2
     assert meta.tables["public.events"].columns == ["id", "payload"]
     assert meta.tables["public.events"].rows == 1
+
+
+def test_parse_dump_handles_single_line_create_table():
+    dump = """CREATE TABLE public.users (id integer PRIMARY KEY, email text);
+COPY public.users (id, email) FROM stdin;
+1\talice@example.com
+2\tbob@example.com
+\\.
+"""
+    meta = parse_dump(dump)
+
+    assert sorted(meta.tables) == ["public.users"]
+    assert meta.tables["public.users"].columns == ["id", "email"]
+    assert meta.tables["public.users"].rows == 2

@@ -41,7 +41,7 @@ v1 supports PostgreSQL only.
 ## Usage
 
 ```yaml
-- uses: DawnofGenX/restore-verify-action@v0.1
+- uses: DawnofGenX/restore-verify-action@v0.2
   with:
     dump-path: artifacts/latest.sql.gz
     postgres-image: postgres:17

@@ -74,8 +74,20 @@ def parse_dump(text: str) -> DumpMeta:
         create_match = _CREATE_RE.match(line)
         if create_match:
             name = _clean_identifier(create_match.group(1))
-            if name not in meta.tables:
-                meta.tables[name] = TableMeta()
+            table = meta.tables.setdefault(name, TableMeta())
+            open_paren = line.find("(", create_match.start())
+            close_paren = line.rfind(")")
+            if close_paren > open_paren and line.rstrip().endswith(");"):
+                # Single-line CREATE TABLE: parse its inline column list now,
+                # otherwise the following COPY would be mistaken for a column.
+                for part in line[open_paren + 1 : close_paren].split(","):
+                    piece = part.strip()
+                    if not piece or piece.lower().startswith(_SKIP_COLUMN_PREFIXES):
+                        continue
+                    column = _clean_identifier(piece.split()[0])
+                    if column and column not in table.columns:
+                        table.columns.append(column)
+                continue
             in_create = name
             continue
 
