@@ -67,8 +67,28 @@ comment ID/body verified (10/10).
 | VonHoltenCodes/SlowBooks-Pro-2026 | #1219 | 7145447614 | yes (maintainer calls it a beta known limitation) |
 | teslamate-org/teslamate | #5533 | 7145448158 | yes (weakest fit) |
 
-No PRs, forks, or pushes have been made yet. Day-30 acknowledgement gate:
-0/10 so far; comments are too new to count.
+## PR log — 7 open PRs, 1 blocked (2026-11-25 IST)
+
+Action repo published at https://github.com/DawnofGenX/restore-verify-action
+(current tag `v0.2`, 0★ at publication). Each PR adds only
+`.github/workflows/restore-verify-optional.yml`, opt-in via `workflow_dispatch`
+plus a weekly schedule, using a self-contained synthetic dump and no secrets.
+The exact workflow dump was run locally through `src/verify.py` on
+`postgres:17` with exit 0; full suite 11/11 passed after fixing a single-line
+`CREATE TABLE` parser bug found by that workflow fixture.
+
+| Repo | PR | Status |
+|---|---|---|
+| supabase/supabase | [#53980](https://github.com/supabase/supabase/pull/53980) | open |
+| immich-app/immich | [#33670](https://github.com/immich-app/immich/pull/33670) | open |
+| appsmithorg/appsmith | [#42680](https://github.com/appsmithorg/appsmith/pull/42680) | open |
+| ddev/ddev | [#9198](https://github.com/ddev/ddev/pull/9198) | open |
+| agentes-chat/agentes-chat | [#1371](https://github.com/agentes-chat/agentes-chat/pull/1371) | open |
+| PicPeak/picpeak | [#2663](https://github.com/PicPeak/picpeak/pull/2663) | open |
+| VonHoltenCodes/SlowBooks-Pro-2026 | [#1230](https://github.com/VonHoltenCodes/SlowBooks-Pro-2026/pull/1230) | open |
+| mx-space/core | fork branch `DawnofGenX:restore-verify-optional` pushed | PR create blocked: `DawnofGenX does not have the correct permissions to execute CreatePullRequest` |
+
+No merge is claimed. Record merges only with a merge commit SHA.
 
 ## Motion per qualified repo
 
