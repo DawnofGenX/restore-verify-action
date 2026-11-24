@@ -67,7 +67,7 @@ comment ID/body verified (10/10).
 | VonHoltenCodes/SlowBooks-Pro-2026 | #1219 | 7145447614 | yes (maintainer calls it a beta known limitation) |
 | teslamate-org/teslamate | #5533 | 7145448158 | yes (weakest fit) |
 
-## PR log — 6 open PRs, 1 auto-closed, 1 blocked (2026-11-25 IST)
+## PR log — 6 open PRs, 2 closed, 1 blocked (2026-11-25 IST)
 
 Action repo published at https://github.com/DawnofGenX/restore-verify-action
 (current tag `v0.2`, 0★ at publication). Each PR adds only
@@ -82,13 +82,24 @@ The exact workflow dump was run locally through `src/verify.py` on
 | supabase/supabase | [#53980](https://github.com/supabase/supabase/pull/53980) | open |
 | immich-app/immich | [#33670](https://github.com/immich-app/immich/pull/33670) | closed by author after the bot reopened it: repo CONTRIBUTING.md asks contributors not to use LLMs to generate PRs; this workflow/body were LLM-drafted and that was disclosed |
 | appsmithorg/appsmith | [#42680](https://github.com/appsmithorg/appsmith/pull/42680) | open |
-| ddev/ddev | [#9198](https://github.com/ddev/ddev/pull/9198) | open |
-| agentes-chat/agentes-chat | [#1371](https://github.com/agentes-chat/agentes-chat/pull/1371) | open |
+| ddev/ddev | [#9198](https://github.com/ddev/ddev/pull/9198) | closed by maintainer for missing template/context; replaced by #9199 |
+| ddev/ddev | [#9199](https://github.com/ddev/ddev/pull/9199) | open — template-conformant replacement, title `ci: add optional restore-verification gate, for #8713` |
+| agentes-chat/agentes-chat | [#1371](https://github.com/agentes-chat/agentes-chat/pull/1371) | open — CLA bot asks the author to sign; not signed without explicit user authorization |
 | PicPeak/picpeak | [#2663](https://github.com/PicPeak/picpeak/pull/2663) | open |
 | VonHoltenCodes/SlowBooks-Pro-2026 | [#1230](https://github.com/VonHoltenCodes/SlowBooks-Pro-2026/pull/1230) | open |
 | mx-space/core | fork branch `DawnofGenX:restore-verify-optional` pushed | PR create blocked: `DawnofGenX does not have the correct permissions to execute CreatePullRequest` |
 
 No merge is claimed. Record merges only with a merge commit SHA.
+
+## Day-0 monitoring baseline (2026-11-25 IST)
+
+- Action repo: 0★, 0 forks, 0 open issues; pushed 2026-11-24T22:00:40Z.
+- Issue comments: 10/10 resolve; 0 replies from anyone other than the author.
+- PRs: 6 open, 2 closed (immich LLM policy; ddev replaced), 1 PR-blocked fork. Bot comments only so far — no human acknowledgement.
+- agentes-chat#1371 is open but its CLA bot requires the author to sign the CLA before merge; not signed without explicit user authorization.
+- Death-signal baseline (no tool-agnostic restore-verify gate observed): databasus 9328★, wal-g 4349★, pg_probackup 801★, pgmoneta 328★, pghoard 1427★, restoredrill 116★.
+- Raw snapshot: `/home/hermes/.hermes/cache/scratch/scale-analysis/status-day0.json`
+- Next check: day-30 (2026-12-25 IST) against ≥5/10 acknowledgements; day-45 (2026-01-09 IST) against ≥30★; day-90 (2026-02-23 IST) against ≥100★ OR ≥3 merged installs in ≥500★ repos.
 
 ## Motion per qualified repo
 
