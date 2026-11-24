@@ -41,7 +41,7 @@ v1 supports PostgreSQL only.
 ## Usage
 
 ```yaml
-- uses: DawnofGenX/restore-verify-action@v0.2
+- uses: DawnofGenX/restore-verify-action@v0.3
   with:
     dump-path: artifacts/latest.sql.gz
     postgres-image: postgres:17
@@ -56,16 +56,20 @@ Inputs: `dump-path` (required), `postgres-image` (default `postgres:17`),
 The composite action runs on a GitHub-hosted runner with Docker and Python 3
 already present. Nothing is hosted by this project.
 
-## Proof (real containers, 2026-11-24 IST)
+## Proof (real containers, 2026-11-25 IST)
 
 ```
 $ python3 tests/adhoc-verify.py
-RESULT: skew_fail=True partial_fail=True row_mismatch_seen=True healthy_pass=True container_leaks=0
+RESULT: skew_fail=True partial_fail=True row_mismatch_seen=True healthy_pass=True gzip_pass=True container_leaks=0
 ADHOC VERIFY: PASS (tempdir removed)
 
 $ pytest tests/ -q
-10 passed in 9.78s   # 3 consecutive runs: 7/7, then 10/10 after contract tests
+12 passed in 12.16s   # includes a real-container .sql.gz restore test
 ```
+
+The gzip test exists because v0.2 parsed `.sql.gz` correctly but piped the
+compressed bytes into psql; v0.3 restores the same decompressed text that the
+parser saw.
 
 The partial-restore test also proves the *trigger*: naive `psql -f` (no
 `ON_ERROR_STOP`) exits 0 with `duplicate key value violates unique constraint`,

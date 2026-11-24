@@ -245,29 +245,28 @@ def main(argv: list[str] | None = None) -> int:
     try:
         container = start_container(args.postgres_image)
         wait_ready(container)
-        with dump_path.open("rb") as fh:
-            restore = run(
-                [
-                    "docker",
-                    "exec",
-                    "-i",
-                    container,
-                    "psql",
-                    "-X",
-                    "-h",
-                    "127.0.0.1",
-                    "-v",
-                    "ON_ERROR_STOP=1",
-                    "-q",
-                    "-U",
-                    "postgres",
-                    "-d",
-                    "restore_verify",
-                    "-f",
-                    "-",
-                ],
-                stdin=fh,
-            )
+        restore = run(
+            [
+                "docker",
+                "exec",
+                "-i",
+                container,
+                "psql",
+                "-X",
+                "-h",
+                "127.0.0.1",
+                "-v",
+                "ON_ERROR_STOP=1",
+                "-q",
+                "-U",
+                "postgres",
+                "-d",
+                "restore_verify",
+                "-f",
+                "-",
+            ],
+            input_text=raw,
+        )
         restore_output = restore.stdout + restore.stderr
         errors = error_lines(restore_output) if args.fail_on_stderr == "true" else []
         actual_rows, actual_columns = query_restored(container, meta)
