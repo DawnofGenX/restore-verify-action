@@ -1,0 +1,49 @@
+name: restore-verify
+description: >-
+  Prove a PostgreSQL logical dump is actually restorable by restoring it into a
+  throwaway container and failing on ERROR/FATAL output or row/column drift.
+  This is a verification gate, not a backup tool.
+
+inputs:
+  dump-path:
+    description: Path (or glob resolved by the caller) to a plain-format pg_dump SQL file, optionally .gz.
+    required: true
+  postgres-image:
+    description: Docker image tag used as the throwaway restore target.
+    required: false
+    default: postgres:17
+  min-tables:
+    description: Minimum number of tables that must be parsed from the dump.
+    required: false
+    default: '1'
+  expected-tables:
+    description: Comma-separated qualified table names that must be present in the dump.
+    required: false
+    default: ''
+  fail-on-stderr:
+    description: Fail when psql emits any ERROR/FATAL line. Set to false only for diagnosis.
+    required: false
+    default: 'true'
+
+runs:
+  using: composite
+  steps:
+    - name: Restore dump into a throwaway Postgres container
+      shell: bash
+      env:
+        INPUT_DUMP_PATH: ${{ inputs.dump-path }}
+        INPUT_POSTGRES_IMAGE: ${{ inputs.postgres-image }}
+        INPUT_MIN_TABLES: ${{ inputs.min-tables }}
+        INPUT_EXPECTED_TABLES: ${{ inputs.expected-tables }}
+        INPUT_FAIL_ON_STDERR: ${{ inputs.fail-on-stderr }}
+      run: |
+        python3 "${{ github.action_path }}/src/verify.py" \
+          --dump-path "$INPUT_DUMP_PATH" \
+          --postgres-image "$INPUT_POSTGRES_IMAGE" \
+          --min-tables "$INPUT_MIN_TABLES" \
+          --expected-tables "$INPUT_EXPECTED_TABLES" \
+          --fail-on-stderr "$INPUT_FAIL_ON_STDERR"
+
+branding:
+  icon: check-circle
+  color: green
