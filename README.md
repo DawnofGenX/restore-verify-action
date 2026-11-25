@@ -41,7 +41,7 @@ v1 supports PostgreSQL only.
 ## Usage
 
 ```yaml
-- uses: DawnofGenX/restore-verify-action@v0.3
+- uses: DawnofGenX/restore-verify-action@v0.4
   with:
     dump-path: artifacts/latest.sql.gz
     postgres-image: postgres:17
@@ -58,14 +58,23 @@ already present. Nothing is hosted by this project.
 
 ## Proof (real containers, 2026-11-25 IST)
 
+Ad-hoc verifier (temporary script, tempdir, removed after PASS):
+
 ```
-$ python3 tests/adhoc-verify.py
 RESULT: skew_fail=True partial_fail=True row_mismatch_seen=True healthy_pass=True gzip_pass=True container_leaks=0
 ADHOC VERIFY: PASS (tempdir removed)
 
-$ pytest tests/ -q
-12 passed in 12.16s   # includes a real-container .sql.gz restore test
+RESULT: healthy_pass=True gzip_pass=True partial_fail=True skew_fail=True pass_summary_table_report=True gzip_summary_table_report=True fail_summary_table_report=True skew_summary_error=True no_leaks=True
+ADHOC VERIFY: PASS (tempdir removed)
 ```
+
+```
+$ pytest tests/ -q
+14 passed in 14.77s   # includes real-container gzip and PASS/FAIL summary-report tests
+```
+
+v0.4 adds an expected-vs-actual rows/columns table to both PASS and FAIL job
+summaries, as required by the spec's artifact contract.
 
 The gzip test exists because v0.2 parsed `.sql.gz` correctly but piped the
 compressed bytes into psql; v0.3 restores the same decompressed text that the

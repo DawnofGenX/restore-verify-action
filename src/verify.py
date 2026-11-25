@@ -50,6 +50,22 @@ def compare_results(meta, actual_rows: dict[str, int], actual_columns: dict[str,
     return issues
 
 
+def format_table_report(meta, actual_rows: dict[str, int], actual_columns: dict[str, list[str]]) -> str:
+    """Render expected-vs-actual rows and columns for the GitHub job summary."""
+    lines = [
+        "| table | dump rows | restored rows | dump columns | restored columns |",
+        "| --- | ---: | ---: | --- | --- |",
+    ]
+    for name, table in meta.tables.items():
+        rows = actual_rows.get(name)
+        columns = actual_columns.get(name)
+        lines.append(
+            f"| {name} | {table.rows} | {rows if rows is not None else '-'} | "
+            f"{', '.join(table.columns) or '-'} | {', '.join(columns) if columns else '-'} |"
+        )
+    return "\n".join(lines)
+
+
 class GateError(Exception):
     def __init__(self, message: str, code: int = 2):
         super().__init__(message)
@@ -279,18 +295,23 @@ def main(argv: list[str] | None = None) -> int:
         details = "\n".join(
             f"- {line}" for line in (errors + issues)
         ) or "- none"
+        table_report = format_table_report(meta, actual_rows, actual_columns)
         summary = (
             "## restore-verify: FAIL\n\n"
             f"- image: `{args.postgres_image}`\n"
             f"- tables parsed: {len(meta.tables)}\n"
-            f"- restore exit code: {restore.returncode}\n"
-            f"- ERROR/FATAL lines and mismatches:\n{details}\n"
+            f"- restore exit code: {restore.returncode}\n\n"
+            f"{table_report}\n\n"
+            f"ERROR/FATAL lines and mismatches:\n{details}\n"
         )
         if restore.returncode != 0 or errors or issues:
             write_summary(summary)
             return 1
         write_summary(
             "## restore-verify: PASS\n\n"
+            f"- image: `{args.postgres_image}`\n"
+            f"- tables verified: {len(meta.tables)}\n\n"
+            f"{table_report}\n\n"
             f"restore completed with no ERROR/FATAL lines; {len(meta.tables)} table(s) "
             "matched parsed row counts and columns."
         )

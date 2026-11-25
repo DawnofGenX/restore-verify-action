@@ -70,7 +70,7 @@ comment ID/body verified (10/10).
 ## PR log — 6 open PRs, 2 closed, 1 blocked (2026-11-25 IST)
 
 Action repo published at https://github.com/DawnofGenX/restore-verify-action
-(current tag `v0.3`, 0★ at publication; v0.3 fixes `.sql.gz` restoration — existing PR workflow files intentionally stay pinned to v0.2). Each PR adds only
+(current tag `v0.4`, 0★ at publication; v0.3 fixed `.sql.gz` restoration and v0.4 added expected-vs-actual rows/columns to job summaries — existing PR workflow files intentionally stay pinned to v0.2). Each PR adds only
 `.github/workflows/restore-verify-optional.yml`, opt-in via `workflow_dispatch`
 plus a weekly schedule, using a self-contained synthetic dump and no secrets.
 The exact workflow dump was run locally through `src/verify.py` on
